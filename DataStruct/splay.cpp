@@ -1,24 +1,33 @@
-
-const int maxn=220000;
+#define key_value ch[ch[root][1]][0]
+const int maxn=110000;
 
 int n, a[maxn];
 
 int ch[maxn][2], rev[maxn], add[maxn], sz[maxn], pre[maxn], key[maxn], minn[maxn];
-int root, tot1;
-int s[maxn], tot2;
+int root, tot;
+int sss[maxn], tot2;
 
-void newNode(int& r, int father, int k) {
-    if(tot2) r = s[tot2--];
-    else r = ++tot1;
-    ch[r][0]=ch[r][1]=rev[r]=add[r]=0;
-    sz[r]=1; pre[r]=father; key[r]=minn[r]=k;
-}
 void erase(int r) {
-    if(r) {
-        s[++tot2] = r;
+    if(r) sss[++tot2] = r;
+}
+void newNode(int& r, int father, int k) {
+    if(tot2) {
+        r = sss[tot2--];
         erase(ch[r][0]);
         erase(ch[r][1]);
     }
+    else r = ++tot;
+    ch[r][0]=ch[r][1]=rev[r]=add[r]=0;
+    sz[r]=1; pre[r]=father; key[r]=minn[r]=k;
+}
+void updRev(int r) {
+    if(!r) return ;
+    swap(ch[r][0],ch[r][1]);
+    rev[r] ^= 1;
+}
+void updAdd(int r, int d) {
+    if(!r) return ;
+    key[r]+=d; minn[r]+=d; add[r]+=d;
 }
 void pushUp(int r) {
     sz[r] = sz[ch[r][1]]+sz[ch[r][0]]+1;
@@ -28,10 +37,12 @@ void pushUp(int r) {
 }
 void pushDown(int r) {
     if(rev[r]) {
-        rev[ch[r][0]] ^= 1;
-        rev[ch[r][1]] ^= 1;
-        swap(ch[r][0], ch[r][1]);
+        updRev(ch[r][0]); updRev(ch[r][1]);
         rev[r] = 0;
+    }
+    if(add[r]) {
+        updAdd(ch[r][0],add[r]); updAdd(ch[r][1],add[r]);
+        add[r] = 0;
     }
 }
 void build(int& x, int l, int r, int fa) {
@@ -43,12 +54,12 @@ void build(int& x, int l, int r, int fa) {
     pushUp(x);
 }
 void init() {
-    root=tot1=tot2=0;
+    root=tot=tot2=0;
     ch[root][0]=ch[root][1]=pre[root]=sz[root]=0;
     minn[root]=key[root]=INT_MAX;
     newNode(root, 0, INT_MAX);
     newNode(ch[root][1], root, INT_MAX);
-    build(ch[ch[root][1]][0], 1, n, ch[root][1]);
+    build(key_value, 1, n, ch[root][1]);
     pushUp(ch[root][1]);
     pushUp(root);
 }
@@ -112,7 +123,7 @@ void removeRoot() {
     }
     int k = getMin(ch[root][1]); // 找到右子树中最小的
     splay(k, root); // 旋转过来，使得右子树没有左孩子
-    ch[ch[root][1]][0] = ch[root][0];
+    key_value = ch[root][0];
     root = ch[root][1];
     pre[ch[root][0]] = root;
     pre[root] = 0;
