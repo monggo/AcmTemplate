@@ -1,5 +1,5 @@
 /*  HDOJ 4010 */
-//�и�ϲ�����,·�������е�ĵ�Ȩ����һ��ֵ,��ѯ·���ϵ�Ȩ�����ֵ
+//切割、合并子树,路径上所有点的点权增加一个值,查询路径上点权的最大值
 #include <bits/stdc++.h>
 
 using namespace std;

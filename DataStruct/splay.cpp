@@ -121,8 +121,8 @@ void removeRoot() {
         pre[root] = 0;
         return ;
     }
-    int k = getMin(ch[root][1]); // ÕÒµ½ÓÒ×ÓÊ÷ÖĞ×îĞ¡µÄ
-    splay(k, root); // Ğı×ª¹ıÀ´£¬Ê¹µÃÓÒ×ÓÊ÷Ã»ÓĞ×óº¢×Ó
+    int k = getMin(ch[root][1]); // æ‰¾åˆ°å³å­æ ‘ä¸­æœ€å°çš„
+    splay(k, root); // æ—‹è½¬è¿‡æ¥ï¼Œä½¿å¾—å³å­æ ‘æ²¡æœ‰å·¦å­©å­
     key_value = ch[root][0];
     root = ch[root][1];
     pre[ch[root][0]] = root;
