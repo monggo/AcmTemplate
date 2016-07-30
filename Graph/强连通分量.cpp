@@ -2,13 +2,13 @@ vector<int> g[maxn];
 int pre[maxn], low[maxn], sccno[maxn], dfs_clock, scc_cnt;
 stack<int> s;
 
-void dfs(int u) {
+void tarjan(int u) {
     pre[u] = low[u] = ++dfs_clock;
     s.push(u);
     for(int i = 0; i < g[u].size(); i++) {
         int v = g[u][i];
         if(!pre[v]) {
-            dfs(v);
+            tarjan(v);
             low[u] = min(low[u], low[v]);
         } else if (!sccno[v]) {
             low[u] = min(low[u], pre[v]);
@@ -28,5 +28,5 @@ void find_scc(int n) {
     memset(sccno, 0, sizeof(sccno));
     memset(pre, 0, sizeof(pre));
     for(int i = 0; i < n; i++)
-        if(!pre[i]) dfs(i);
+        if(!pre[i]) tarjan(i);
 }

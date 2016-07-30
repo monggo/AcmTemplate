@@ -1,13 +1,13 @@
 vector<int> g[maxn];
 int pre[maxn], low[maxn], iscut[maxn], dfs_clock;
-void dfs(int u, int fa) {
+void tarjan(int u, int fa) {
     low[u] = pre[u] = ++dfs_clock;
     int child = 0;
-    for(int i = 0; i < g[i].size(); i++) {
+    for(int i = 0; i < g[u].size(); i++) {
         int v = g[u][i];
         if(!pre[v]) {
             child++;
-            dfs(v, u);
+            tarjan(v, u);
             low[u] = min(low[u], low[v]);
             if(low[v] >= pre[u]) {
                 iscut[u] = 1;
@@ -18,5 +18,5 @@ void dfs(int u, int fa) {
         }
     }
 
-    if(fa==-1 && child>1) iscut[u] = 1;
+    if(fa==-1 && child==1) iscut[u] = 0;
 }

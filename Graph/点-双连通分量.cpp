@@ -9,16 +9,16 @@ vector<int> g[maxn], bcc[maxn];
 int pre[maxn], low[maxn], iscut[maxn], bccno[maxn], dfs_clock, bcc_cnt;
 stack<Edge> s;
 
-void dfs(int u, int fa) {
+void tarjan(int u, int fa) {
     low[u] = pre[u] = ++dfs_clock;
     int child = 0;
-    for(int i = 0; i < g[i].size(); i++) {
+    for(int i = 0; i < g[u].size(); i++) {
         int v = g[u][i];
         Edge e = Edge(u, v);
         if(!pre[v]) {
             s.push(e);
             child++;
-            dfs(v, u);
+            tarjan(v, u);
             low[u] = min(low[u], low[v]);
             if(low[v] >= pre[u]) {
                 iscut[u] = 1;
@@ -44,7 +44,7 @@ void dfs(int u, int fa) {
         }
     }
 
-    if(fa==-1 && child>1) iscut[u] = 1;
+    if(fa==-1 && child==1) iscut[u] = 0;
 }
 void find_bcc() {
     memset(pre, 0, sizeof(pre));
@@ -52,5 +52,5 @@ void find_bcc() {
     memset(bccno, 0, sizeof(bccno));
     dfs_clock = bcc_cnt = 0;
     for(int i = 0; i < n; i++)
-        if(!pre[i]) dfs(i, -1);
+        if(!pre[i]) tarjan(i, -1);
 }
