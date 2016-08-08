@@ -1,4 +1,5 @@
-const int INF = 1<<30;
+const int INF = 0x3f3f3f3f;
+const int N = 110;
 
 struct edge{
     int from, to, cap, flow, cost;
