@@ -48,6 +48,7 @@ int main() {
         sort(b, b+n);
         int bn = 1;
         for (int i = 1; i < n; i++) if (b[i] != b[i-1]) b[bn++] = b[i];
+
         tot = 0;
         build(0, bn-1, rt[0]);
         for (int i = 0; i < n; i++) {
