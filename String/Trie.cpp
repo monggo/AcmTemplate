@@ -5,8 +5,8 @@ struct Trie {
     void init() { sz = 1; memset(ch[0], 0, sizeof(ch[0])); }
     int idx(char c) { return c-'a'; }
     void insert(char *s, int v) {
-        int u = 0, n = strlen(s);
-        for (int i = 0; i < n; i++) {
+        int u = 0, len = strlen(s);
+        for (int i = 0; i < len; i++) {
             int c = idx(s[i]);
             if (!ch[u][c]) {
                 memset(ch[sz], 0, sizeof(ch[sz]));
