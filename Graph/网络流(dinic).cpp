@@ -4,12 +4,25 @@ struct Edge {
     int from, to, cap, flow;
 };
 struct Dinic {
-    int n, m, s, t;
+    int m, s, t;
     vector<Edge> edges;
     vector<int> g[maxn];
     bool vis[maxn];
     int d[maxn];
     int cur[maxn];
+
+	void init() {
+		edges.clear();
+		for(int i = 0; i < maxn; i++) g[i].clear();
+	}
+
+	void addEdge(int from, int to, int cap) {
+		edges.push_back((Edge){from, to, cap, 0});
+		edges.push_back((Edge){to, from, 0, 0});
+		m = edges.size();
+		g[from].push_back(m-2);
+		g[to].push_back(m-1);
+	}
 
     bool bfs() {
         memset(vis, 0, sizeof vis);

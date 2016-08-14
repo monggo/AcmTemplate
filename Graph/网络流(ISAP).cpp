@@ -1,6 +1,6 @@
 // ISAP+bfs 初始化+栈优化
 const int MAXN = 100010; // 点数的最大值
-const int MAXM = 400010; // 边数的最大值
+const int MAXM = 400010; // 边数的最大值，注意一条单向边要增加两条边
 const int INF = 0x3f3f3f3f;
 
 struct Edge {
