@@ -1,67 +1,74 @@
+/*
+  最小费用最大流，求最大费用只需要取相反数，结果取相反数即可。
+  点的总数为 N，点的编号 0~N-1
+*/
+const int MAXN = 10000;
+const int MAXM = 100000;
 const int INF = 0x3f3f3f3f;
-const int N = 110;
+struct Edge {
+    int to, cap, flow, cost, next;
+    Edge() {}
+    Edge(int to,int cap,int flow,int cost,int next) : to(to),cap(cap),flow(flow),cost(cost),next(next) {}
+} edge[MAXM];
 
-struct edge{
-    int from, to, cap, flow, cost;
-};
-
-struct MCMF{
-    int n, m, s, t, flow, cost;
-    vector<edge> edges;
-    vector<int> g[N];
-    int inq[N];
-    int d[N];
-    int p[N];
-    int a[N];
-
-    void init(int n) {
-        this->n = n;
-        flow = cost = 0;
-        for (int i = 0; i < n; i++) g[i].clear();
-        edges.clear();
+int head[MAXN], tol;
+int pre[MAXN], dis[MAXN];
+bool vis[MAXN];
+int N; //节点总个数，节点编号从0~N-1
+void init(int n) {
+    N = n;
+    tol = 0;
+    memset(head, -1, sizeof(head));
+}
+void addedge(int u, int v, int cap, int cost) {
+    edge[tol] = Edge(v, cap, 0, cost, head[u]);
+    head[u] = tol++;
+    edge[tol] = Edge(u, 0, 0, -cost, head[v]);
+    head[v] = tol++;
+}
+bool spfa(int s, int t) {
+    queue<int> q;
+    for(int i = 0; i < N; i++) {
+        dis[i] = INF;
+        vis[i] = false;
+        pre[i] = -1;
     }
-
-    void addEdge(int from, int to, int cap, int cost) {
-        edges.push_back((edge){from, to, cap, 0, cost});
-        edges.push_back((edge){to, from, 0, 0, -cost});
-        m = edges.size();
-        g[from].push_back(m-2);
-        g[to].push_back(m-1);
-    }
-
-    bool BellmanFord(int s, int t, int& flow, int& cost) {
-        for (int i = 0; i < n; i++) d[i] = INF;
-        memset(inq, 0, sizeof(inq));
-        d[s] = 0; inq[s] = 1; p[s] = 0; a[s] = INF;
-        queue<int> q;
-        q.push(s);
-        while (!q.empty()) {
-            int u = q.front(); q.pop();
-            inq[u] = 0;
-            for (int i = 0; i < g[u].size(); i++) {
-                edge& e = edges[g[u][i]];
-                if (e.cap > e.flow && d[e.to] > d[u]+e.cost) {
-                    d[e.to] = d[u]+e.cost;
-                    p[e.to] = g[u][i];
-                    a[e.to] = min(a[u], e.cap-e.flow);
-                    if (!inq[e.to]) { q.push(e.to); inq[e.to] = 1; }
+    dis[s] = 0;
+    vis[s] = true;
+    q.push(s);
+    while(!q.empty()) {
+        int u = q.front();
+        q.pop();
+        vis[u] = false;
+        for(int i = head[u]; i != -1; i = edge[i].next) {
+            int v = edge[i].to;
+            if(edge[i].cap > edge[i].flow && dis[v] > dis[u]+edge[i].cost ) {
+                dis[v] = dis[u]+edge[i].cost;
+                pre[v] = i;
+                if(!vis[v]) {
+                    vis[v] = true;
+                    q.push(v);
                 }
             }
         }
-        if (d[t] == INF) return false;
-        flow += a[t];
-        cost += d[t]*a[t];
-        int u = t;
-        while (u != s) {
-            edges[p[u]].flow += a[t];
-            edges[p[u]^1].flow -= a[t];
-            u = edges[p[u]].from;
+    }
+    if(pre[t] == -1) return false;
+    else return true;
+}
+//返回的是最大流，cost存的是最小费用
+void mcmf(int s, int t, int &cost, int &flow) {
+    flow = cost = 0;
+    while(spfa(s, t)) {
+        int Min = INF;
+        for(int i = pre[t]; i != -1; i = pre[edge[i^1].to]) {
+            if(Min > edge[i].cap-edge[i].flow)
+                Min = edge[i].cap-edge[i].flow;
         }
-        return true;
+        for(int i = pre[t]; i != -1; i = pre[edge[i^1].to]) {
+            edge[i].flow += Min;
+            edge[i^1].flow -= Min;
+            cost += edge[i].cost*Min;
+        }
+        flow += Min;
     }
-
-    int Mincost(int s, int t) {
-        while (BellmanFord(s, t, flow, cost)) ;
-    }
-}mcmf;
-
+}

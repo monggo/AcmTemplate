@@ -4,7 +4,9 @@ const int MAXM = 400010; // 边数的最大值，注意一条单向边要增加两条边
 const int INF = 0x3f3f3f3f;
 
 struct Edge {
-    int to, next, cap, flow;
+    int to, cap, flow, next;
+    Edge() {}
+    Edge(int to,int cap,int flow,int next) : to(to),cap(cap),flow(flow),next(next) {}
 }edge[MAXM]; // 注意是MAXM
 int tol;
 int head[MAXN];
@@ -15,15 +17,9 @@ void init() {
     memset(head, -1, sizeof head);
 }
 void addedge(int u, int v, int w, int rw = 0) {
-    edge[tol].to = v;
-    edge[tol].cap = w;
-    edge[tol].flow = 0;
-    edge[tol].next = head[u];
+    edge[tol] = Edge(to, w, 0, head[u]);
     head[u] = tol++;
-    edge[tol].to = u;
-    edge[tol].cap = rw;
-    edge[tol].flow = 0;
-    edge[tol].next = head[v];
+    edge[tol] = Edge(u, rw, 0, head[v]);
     head[v] = tol++;
 }
 int Q[MAXN];

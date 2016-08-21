@@ -2,6 +2,8 @@ const int maxn = 100;
 const int INF = 0x3f3f3f3f;
 struct Edge {
     int from, to, cap, flow;
+    Edge() {}
+    Edge(int from,int to,int cap,int flow) : from(from),to(to),cap(cap),flow(flow) {}
 };
 struct Dinic {
     int m, s, t;
@@ -17,8 +19,8 @@ struct Dinic {
 	}
 
 	void addEdge(int from, int to, int cap) {
-		edges.push_back((Edge){from, to, cap, 0});
-		edges.push_back((Edge){to, from, 0, 0});
+		edges.push_back(Edge(from, to, cap, 0));
+		edges.push_back(Edge(to, from, 0, 0));
 		m = edges.size();
 		g[from].push_back(m-2);
 		g[to].push_back(m-1);

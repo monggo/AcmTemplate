@@ -85,6 +85,10 @@ int lca(int a ,int b) {
     if(p[a] > p[b]) swap(a,b);
     return f[rmq(p[a], p[b])];
 }
+/*
+dfs(1, 0);
+init_rmq(cnt);
+*/
 /*              LCA²¿·Ö            */
 
 int main() {
