@@ -131,6 +131,8 @@ class MyComparator implements Comparator<Integer>{
         }
     }
 }
+3¡¢lambda(½ö JAVA8 Ö§³Ö)
+Arrays.sort(Point[] p, int fromIndex, int toIndex, (a,b)->(a.x!=b.x?a.x-b.x:a.y-b.y));
 
 
 

@@ -20,7 +20,7 @@ void tarjan(int u, int fa) {
             child++;
             tarjan(v, u);
             low[u] = min(low[u], low[v]);
-            if(low[v] >= pre[u]) {
+            if(low[v] == pre[u]) {
                 iscut[u] = 1;
                 bcc_cnt++;
                 bcc[bcc_cnt].clear();
@@ -36,6 +36,8 @@ void tarjan(int u, int fa) {
                     }
                     if(x.u==u && x.v==v) break;
                 }
+            } else if(low[v] > pre[u]) {
+                s.pop();
             }
         }
         else if(pre[v]<pre[u] && v != fa) {
