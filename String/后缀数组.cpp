@@ -44,7 +44,7 @@ int find(char* P) {
     }
 }
 
-void getHeight() {
+void get_height() {
     int i, j, k = 0;
     for (i = 0; i < n; i++) ran[sa[i]] = i;
     for (i = 0; i < n; i++) {
@@ -53,4 +53,26 @@ void getHeight() {
         while (s[i+k] == s[j+k]) k++;
         height[ran[i]] = k;
     }
+}
+
+int d[maxn][20], Log[maxn];
+void rmq_init() {
+    Log[0] = -1;
+    for(int i=1;i<=maxn;i++)
+        Log[i] = (i&(i-1)) ? Log[i-1] : Log[i-1]+1;
+
+    for(int i = 0; i < n; i++) d[i][0] = height[i];
+    for(int i = 1; i <= Log[n]; i++)
+        for(int j = 0; j+(1<<i)-1 < n; j++)
+            d[j][i] = min(d[j][i-1], d[j+(1<<(i-1))][i-1]);
+}
+
+int lcp(int l, int r) {
+    if(l == r) return n-1-l;
+    l = ran[l]; r = ran[r];
+    if(l > r) swap(l, r);
+    int a = l+1, b = r;
+    int k = Log[b-a+1];
+    /// k = floor(log(b-a+1.0)/log(2.0));
+    return min(d[a][k], d[b-(1<<k)+1][k]);
 }
